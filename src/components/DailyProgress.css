@@ -1,0 +1,219 @@
+:root {
+    --bg: #ffffff;
+    --text: #000000;
+    --cell: #f0f0f0;
+    --th: #e6e6e6;
+    --pie-pending: #e2e8f0;
+    --pie-complete: #2563eb;
+  }
+  
+  [data-theme='dark'] {
+    --bg: #1e1e2f;
+    --text: #ffffff;
+    --cell: #2a2a3d;
+    --th: #2e2e40;
+    --pie-pending: #4b5563;
+    --pie-complete: #3b82f6;
+  }
+  
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+  }
+  
+  .progress-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px 0;
+  }
+  
+  .table-chart-wrapper {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  
+  .table-section {
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  .chart-section {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  
+  .reset-button {
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-left: 10px;
+  }
+  
+  .reset-button:hover {
+    background-color: #b91c1c;
+  }
+  
+  .pie-container {
+    width: 280px;
+    height: 280px;
+    margin-top: 130px;
+    padding: 0px;
+    background-color: transparent;
+    border-radius: 50%;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .daily-progress-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  
+  .daily-progress-table th {
+    background-color: var(--th);
+    color: var(--text);
+    height: 50px;
+  }
+  
+  .daily-progress-table th,
+  .daily-progress-table td {
+    border: 1px solid var(--text);
+    text-align: center;
+    vertical-align: middle;
+    height: 50px;
+    padding: 0;
+    background-color: var(--cell);
+    color: var(--text);
+  }
+  
+  input[type="text"] {
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+    padding: 4px 6px;
+    box-sizing: border-box;
+    text-align: center;
+    vertical-align: middle;
+    border: none;
+    background-color: transparent;
+    color: var(--text);
+  }
+  
+  .static-text {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text);
+  }
+  
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    display: block;
+    margin: auto;
+    accent-color: var(--pie-complete);
+  }
+  
+  .primary-button {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-bottom: 10px;
+  }
+  
+  .primary-button:hover {
+    background-color: #1e4ed8;
+  }
+  
+  .secondary-button {
+    background-color: #38a169;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-left: 10px;
+  }
+  
+  .secondary-button:hover {
+    background-color: #2f855a;
+  }
+  
+  .delete-button {
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: var(--text);
+  }
+  
+  .delete-button:hover {
+    color: red;
+  }
+  
+  .report-section {
+    width: 100%;
+    margin-top: 40px;
+  }
+  
+  .report-section h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  
+  .report-table th,
+  .report-table td {
+    border: 1px solid var(--text);
+    padding: 8px;
+    text-align: center;
+    background-color: var(--cell);
+    color: var(--text);
+  }
+  
+  .report-table th {
+    background-color: var(--th);
+  }
+  
+  .reverse-timer {
+    font-size: 14px;
+    color: var(--text);
+    margin-top: -10px;
+    margin-bottom: 15px;
+  }
+  

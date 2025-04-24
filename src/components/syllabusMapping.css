@@ -1,0 +1,162 @@
+.syllabus-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  body.dark-mode .syllabus-container {
+    background-color: #1e1e2f;
+    color: #f0f0f0;
+  }
+  
+  .syllabus-container h2 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .legend-item {
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .combo2 { background-color: #1abc9c; }     /* Highest: Studied + Tough + Important */
+  .combo1 { background-color: hsl(11, 87%, 58%); }     /* Studied + Tough */
+  .important { background-color: #2ecc71; }  /* Very Important */
+  .rev3 { background-color: #3498db; }       /* Revision 3 */
+  .rev2 { background-color: #ff69b4; }       /* Revision 2 */
+  .rev1 { background-color:  #cbf54b; }       /* Revision 1 */
+  .studied { background-color: #d392ef; }    /* Studied */
+      
+  
+  .gs-toggle,
+  .subject-toggle {
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 10px 0;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+  }
+  
+  .subject-toggle {
+    background-color: #e4ecf4;
+    color: #2c3e50;
+    font-weight: 500;
+  }
+  
+  .subject-toggle:hover {
+    background-color: #d3e0ed;
+  }
+  
+  body.dark-mode .gs-toggle,
+  body.dark-mode .subject-toggle {
+    background-color: #333;
+    color: white;
+  }
+  
+  .syllabus-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 30px;
+  }
+  
+  .syllabus-table th,
+  .syllabus-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .syllabus-table th {
+    background-color: #2c3e50;
+    color: white;
+  }
+  
+  body.dark-mode .syllabus-table th {
+    background-color: #444;
+  }
+  
+  .syllabus-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  .syllabus-table tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
+  body.dark-mode .syllabus-table tr:nth-child(even) {
+    background-color: #2c2c2c;
+  }
+  body.dark-mode .syllabus-table tr:nth-child(odd) {
+    background-color: #1e1e1e;
+  }
+  .reset-btn {
+    background-color: #e63946;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    margin-left: 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .reset-btn:hover {
+    background-color: #c62828;
+    transform: scale(1.05);
+  }
+  
+  .reset-btn:active {
+    transform: scale(0.95);
+  }
+  
+  
+  /* Final Highlight Classes */
+  .bg-studied-tough-important { background-color: #1dd7b2 !important; }
+  .bg-studied-tough { background-color:  hsl(11, 87%, 58%) !important; }
+  .bg-important { background-color: #92e3b3 !important; }
+  .bg-revision3 { background-color: #4a98cc !important; }
+  .bg-revision2 { background-color: #e782b4 !important; }
+  .bg-revision1 { background-color: #cbf54b !important; }
+  .bg-studied { background-color: #d3a2e9 !important; }
+  
+  
+  @media screen and (max-width: 768px) {
+    .syllabus-table th,
+    .syllabus-table td {
+      font-size: 12px;
+      padding: 6px;
+    }
+  
+    .gs-toggle,
+    .subject-toggle {
+      font-size: 14px;
+    }
+  
+    .legend-item {
+      font-size: 12px;
+      padding: 4px 8px;
+    }
+  }
+  

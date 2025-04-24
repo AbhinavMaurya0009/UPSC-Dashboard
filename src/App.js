@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
+import TimeTable from "./components/TimeTable";
+import DailyProgress from "./components/DailyProgress";
+import SyllabusMapping from "./components/SyllabusMapping";
+import MonthlyTargets from "./components/MonthlyTargets";
+import "./App.css";
 
-function App() {
+const App = () => {
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    document.body.setAttribute("data-theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="container">
+        <div className="header">
+          <h1>UPSC Mirror</h1>
+          <button onClick={() => setDarkMode(!darkMode)} className="dark-toggle">
+            {darkMode ? "🌞 Light Mode" : "🌙 Dark Mode"}
+          </button>
+        </div>
+
+        <div className="navbar">
+          <NavLink to="/" end className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"}>
+            Time Table
+          </NavLink>
+          <NavLink to="/daily-progress" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"}>
+            Daily Progress
+          </NavLink>
+          <NavLink to="/syllabus" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"}>
+            Syllabus Mapping
+          </NavLink>
+          <NavLink to="/monthly-targets" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"}>
+            Monthly Targets
+          </NavLink>
+        </div>
+
+        <Routes>
+          <Route path="/" element={<TimeTable />} />
+          <Route path="/daily-progress" element={<DailyProgress />} />
+          <Route path="/syllabus" element={<SyllabusMapping />} />
+          <Route path="/monthly-targets" element={<MonthlyTargets />} />
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;

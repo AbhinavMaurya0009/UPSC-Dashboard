@@ -1,0 +1,113 @@
+:root {
+    --bg: #ffffff;
+    --text: #000000;
+    --input-bg: transparent;
+    --input-focus-bg: #f0faff;
+    --border: #000000;
+    --th-bg: #f0f0f0;
+  }
+  
+  [data-theme='dark'] {
+    --bg: #1e1e2f;
+    --text: #ffffff;
+    --input-bg: #2a2a3d;
+    --input-focus-bg: #334;
+    --border: #cccccc;
+    --th-bg: #2e2e40;
+  }
+  
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+  }
+  .reset-button {
+    padding: 8px 14px;
+    background-color: #972727;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .reset-button:hover {
+    background-color: #972727;
+  }
+  
+  
+  /* Time Table Styling */
+  .timetable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed;
+  }
+  
+  .timetable th {
+    border: 1px solid var(--border);
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+    height: 80px;
+    background-color: var(--th-bg);
+    color: var(--text);
+    font-weight: bold;
+  }
+  
+  .timetable td {
+    border: 1px solid var(--border);
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+    height: 80px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    background-color: var(--bg);
+    color: var(--text);
+    position: relative;
+  }
+  
+  /* Prevent blank cells from collapsing */
+  .timetable td:empty::after {
+    content: " ";
+    visibility: hidden;
+    display: inline-block;
+  }
+  
+  /* Input Style (when editing) */
+  input {
+    width: 96%;
+    height: 80px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background-color: var(--input-bg);
+    color: var(--text);
+  }
+  
+  input:focus {
+    background-color: var(--input-focus-bg);
+    border: 1px solid #0077cc;
+  }
+  
+  /* Button Style (Edit/Save) */
+  .primary-button {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .primary-button:hover {
+    background-color: #1e4ed8;
+  }
+  
