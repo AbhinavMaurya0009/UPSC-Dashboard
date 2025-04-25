@@ -1,219 +1,273 @@
 :root {
-    --bg: #ffffff;
-    --text: #000000;
-    --cell: #f0f0f0;
-    --th: #e6e6e6;
-    --pie-pending: #e2e8f0;
-    --pie-complete: #2563eb;
-  }
-  
-  [data-theme='dark'] {
-    --bg: #1e1e2f;
-    --text: #ffffff;
-    --cell: #2a2a3d;
-    --th: #2e2e40;
-    --pie-pending: #4b5563;
-    --pie-complete: #3b82f6;
-  }
-  
-  body {
-    background-color: var(--bg);
-    color: var(--text);
-  }
-  
-  .progress-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    padding: 20px 0;
-  }
-  
-  .table-chart-wrapper {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: space-between;
-  }
-  
-  .table-section {
-    flex: 1;
-    min-width: 300px;
-  }
-  
-  .chart-section {
-    flex: 1;
-    min-width: 250px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  
-  .reset-button {
-    background-color: #dc2626;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 14px;
-    font-weight: 500;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    margin-left: 10px;
-  }
-  
-  .reset-button:hover {
-    background-color: #b91c1c;
-  }
-  
-  .pie-container {
-    width: 280px;
-    height: 280px;
-    margin-top: 130px;
-    padding: 0px;
-    background-color: transparent;
-    border-radius: 50%;
-    box-shadow: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .daily-progress-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    font-size: 14px;
-  }
-  
-  .daily-progress-table th {
-    background-color: var(--th);
-    color: var(--text);
-    height: 50px;
-  }
-  
-  .daily-progress-table th,
-  .daily-progress-table td {
-    border: 1px solid var(--text);
-    text-align: center;
-    vertical-align: middle;
-    height: 50px;
-    padding: 0;
-    background-color: var(--cell);
-    color: var(--text);
-  }
-  
-  input[type="text"] {
-    width: 100%;
-    height: 100%;
-    font-size: 14px;
-    padding: 4px 6px;
-    box-sizing: border-box;
-    text-align: center;
-    vertical-align: middle;
-    border: none;
-    background-color: transparent;
-    color: var(--text);
-  }
-  
-  .static-text {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--text);
-  }
-  
-  input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    display: block;
-    margin: auto;
-    accent-color: var(--pie-complete);
-  }
-  
-  .primary-button {
-    background-color: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    margin-bottom: 10px;
-  }
-  
-  .primary-button:hover {
-    background-color: #1e4ed8;
-  }
-  
-  .secondary-button {
-    background-color: #38a169;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 14px;
-    font-weight: 500;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    margin-left: 10px;
-  }
-  
-  .secondary-button:hover {
-    background-color: #2f855a;
-  }
-  
-  .delete-button {
-    background: transparent;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    color: var(--text);
-  }
-  
-  .delete-button:hover {
-    color: red;
-  }
-  
-  .report-section {
-    width: 100%;
-    margin-top: 40px;
-  }
-  
-  .report-section h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  .report-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-  }
-  
-  .report-table th,
-  .report-table td {
-    border: 1px solid var(--text);
-    padding: 8px;
-    text-align: center;
-    background-color: var(--cell);
-    color: var(--text);
-  }
-  
-  .report-table th {
-    background-color: var(--th);
-  }
-  
-  .reverse-timer {
-    font-size: 14px;
-    color: var(--text);
-    margin-top: -10px;
-    margin-bottom: 15px;
-  }
-  
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --cell: #f9fafb;
+  --th: #f3f4f6;
+  --border: #e0e0e0;
+  --pie-complete: #2563eb;
+  --pie-pending: #d1d5db;
+  --highlight: #22c55e;
+  --hover-bg: #f3f4f6;
+  --timer-bg: #f1f5f9;
+}
+
+[data-theme='dark'] {
+  --bg: #0f172a;
+  --text: #e2e8f0;
+  --cell: #1e293b;
+  --th: #334155;
+  --border: #475569;
+  --pie-complete: #3b82f6;
+  --pie-pending: #475569;
+  --highlight: #4ade80;
+  --hover-bg: #1c2a3a;
+  --timer-bg: #1e293b;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Layout */
+.progress-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 30px;
+}
+
+.table-chart-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.table-section,
+.chart-section {
+  flex: 1;
+  min-width: 320px;
+}
+
+/* Chart Section Specific */
+.chart-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+/* Pie Container & Wrapper */
+.pie-container {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pie-wrapper {
+  margin-top: 140px; /* Space between legend and Pie */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pie-container canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Timer */
+.reverse-timer {
+  background-color: var(--timer-bg);
+  padding: 10px 16px;
+  margin: 10px 0;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  width: fit-content;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+/* Buttons */
+.primary-button,
+.secondary-button,
+.reset-button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  margin: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.primary-button {
+  background-color: var(--pie-complete);
+  color: white;
+}
+
+.primary-button:hover {
+  background-color: #1d4ed8;
+}
+
+.secondary-button {
+  background-color: var(--highlight);
+  color: white;
+}
+
+.secondary-button:hover {
+  background-color: #16a34a;
+}
+
+.reset-button {
+  background-color: #ef4444;
+  color: white;
+}
+
+.reset-button:hover {
+  background-color: #dc2626;
+}
+
+/* Tables */
+.daily-progress-table,
+.report-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.daily-progress-table th,
+.report-table th {
+  background-color: var(--th);
+  color: var(--text);
+  height: 50px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.daily-progress-table th:first-child,
+.report-table th:first-child {
+  border-top-left-radius: 10px;
+}
+
+.daily-progress-table th:last-child,
+.report-table th:last-child {
+  border-top-right-radius: 10px;
+}
+
+.daily-progress-table td,
+.report-table td {
+  border: 1px solid var(--border);
+  text-align: center;
+  padding: 12px 8px;
+  background-color: var(--cell);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  border-bottom: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+/* Table Row Hover Effect */
+.daily-progress-table tr:hover td,
+.report-table tr:hover td {
+  background-color: var(--hover-bg);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Text Inputs */
+input[type="text"] {
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  padding: 8px;
+  box-sizing: border-box;
+  text-align: center;
+  background-color: transparent;
+  color: var(--text);
+  border: none;
+  outline: none;
+  border-radius: 6px;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus {
+  background-color: var(--cell);
+  box-shadow: 0 0 0 2px var(--highlight);
+}
+
+/* Static Text */
+.static-text {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Checkbox */
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  cursor: pointer;
+  accent-color: var(--pie-complete);
+}
+
+/* Delete Button */
+.delete-button {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--text);
+  transition: color 0.2s ease;
+}
+
+.delete-button:hover {
+  color: var(--highlight);
+}
+
+/* Report Section */
+.report-section {
+  width: 100%;
+  margin-top: 40px;
+}
+
+.report-section h3 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: var(--text);
+}
+
+.highlight-time {
+  font-weight: bold;
+  color: var(--highlight);
+}

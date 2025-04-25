@@ -255,7 +255,10 @@ const MonthlyProgress = () => {
         <div className="chart-section">
           <h3>Progress Chart</h3>
           <div className="pie-container">
+            <div className='pie-wrapper'>
             <Pie data={pieData} options={pieOptions} />
+
+            </div>
           </div>
         </div>
       </div>

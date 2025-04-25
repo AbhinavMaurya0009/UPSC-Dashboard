@@ -5,26 +5,54 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+const parseTimeToMinutes = (timeStr) => {
+  if (!timeStr) return 0;
+
+  const cleaned = timeStr.trim().toLowerCase();
+
+  const rangeMatch = cleaned.match(/^(\d{1,2})(?::(\d{2}))?-(\d{1,2})(?::(\d{2}))?$/);
+  if (rangeMatch) {
+    const startHour = parseInt(rangeMatch[1], 10);
+    const startMin = parseInt(rangeMatch[2] || '0', 10);
+    const endHour = parseInt(rangeMatch[3], 10);
+    const endMin = parseInt(rangeMatch[4] || '0', 10);
+    const startTotal = startHour * 60 + startMin;
+    const endTotal = endHour * 60 + endMin;
+    return Math.max(endTotal - startTotal, 0);
+  }
+
+  const hrMinMatch = cleaned.match(/^(\d+)\s*h(?:\s*(\d+)\s*m)?$/);
+  if (hrMinMatch) {
+    const hours = parseInt(hrMinMatch[1], 10);
+    const minutes = hrMinMatch[2] ? parseInt(hrMinMatch[2], 10) : 0;
+    return hours * 60 + minutes;
+  }
+
+  const minOnlyMatch = cleaned.match(/^(\d+)\s*m$/);
+  if (minOnlyMatch) return parseInt(minOnlyMatch[1], 10);
+
+  const colonMatch = cleaned.match(/^(\d{1,2}):(\d{2})$/);
+  if (colonMatch) {
+    const hours = parseInt(colonMatch[1], 10);
+    const minutes = parseInt(colonMatch[2], 10);
+    return hours * 60 + minutes;
+  }
+
+  if (!isNaN(Number(cleaned))) return Number(cleaned);
+
+  return 0;
+};
+
 const DailyProgress = () => {
   const [editMode, setEditMode] = useState(false);
-
   const [rows, setRows] = useState(() => {
     const saved = localStorage.getItem('dailyProgressRows');
-    return saved
-      ? JSON.parse(saved)
-      : Array.from({ length: 5 }, (_, i) => ({
-          id: i + 1,
-          time: '',
-          task: '',
-          completed: false
-        }));
+    return saved ? JSON.parse(saved) : Array.from({ length: 5 }, (_, i) => ({ id: i + 1, time: '', task: '', completed: false }));
   });
-
   const [report, setReport] = useState(() => {
     const saved = localStorage.getItem('dailyProgressReport');
     return saved ? JSON.parse(saved) : [];
   });
-
   const [remainingTime, setRemainingTime] = useState('');
   const [currentDate, setCurrentDate] = useState(new Date().toDateString());
 
@@ -34,7 +62,6 @@ const DailyProgress = () => {
     const uncompleted = valid.length - completed;
     const percentage = valid.length ? Math.round((completed / valid.length) * 100) : 0;
     const today = new Date().toLocaleDateString('en-GB');
-
     const newEntry = { date: today, completed, uncompleted, percentage };
 
     setReport(prev => {
@@ -52,12 +79,7 @@ const DailyProgress = () => {
 
       if (now.toDateString() !== currentDate) {
         setCurrentDate(now.toDateString());
-        const resetRows = Array.from({ length: 5 }, (_, i) => ({
-          id: i + 1,
-          time: '',
-          task: '',
-          completed: false
-        }));
+        const resetRows = Array.from({ length: 5 }, (_, i) => ({ id: i + 1, time: '', task: '', completed: false }));
         setRows(resetRows);
         updateReport(resetRows);
       }
@@ -80,48 +102,30 @@ const DailyProgress = () => {
   }, [report]);
 
   const toggleEdit = () => setEditMode(!editMode);
-
   const handleChange = (index, field, value) => {
     const updated = [...rows];
     updated[index][field] = value;
     setRows(updated);
     updateReport(updated);
   };
-
   const handleCheck = (index) => {
     const updated = [...rows];
     updated[index].completed = !updated[index].completed;
     setRows(updated);
     updateReport(updated);
   };
-
   const handleAddRow = () => {
-    const updated = [
-      ...rows,
-      {
-        id: Date.now(),
-        time: '',
-        task: '',
-        completed: false
-      }
-    ];
+    const updated = [...rows, { id: Date.now(), time: '', task: '', completed: false }];
     setRows(updated);
     updateReport(updated);
   };
-
   const handleDeleteRow = (id) => {
-    const updated = rows.filter((row) => row.id !== id);
+    const updated = rows.filter(row => row.id !== id);
     setRows(updated);
     updateReport(updated);
   };
-
   const handleResetRows = () => {
-    const resetRows = Array.from({ length: 5 }, (_, i) => ({
-      id: i + 1,
-      time: '',
-      task: '',
-      completed: false
-    }));
+    const resetRows = Array.from({ length: 5 }, (_, i) => ({ id: i + 1, time: '', task: '', completed: false }));
     setRows(resetRows);
     localStorage.setItem('dailyProgressRows', JSON.stringify(resetRows));
   };
@@ -143,18 +147,27 @@ const DailyProgress = () => {
             ],
         borderWidth: 0,
         hoverOffset: 12,
-      },
-    ],
+      }
+    ]
   };
-
   const pieOptions = {
     plugins: {
+      legend: {
+        display: validRows.length !== 0,
+        position: 'top',
+        labels: {
+          padding: 24, // <-- Adds vertical spacing between legend and pie
+          color: getComputedStyle(document.body).getPropertyValue('--text').trim(),
+          font: {
+            size: 14,
+            weight: '600'
+          }
+        }
+      },
       tooltip: {
         callbacks: {
           label: function (context) {
-            if (validRows.length === 0) {
-              return 'No tasks assigned';
-            }
+            if (validRows.length === 0) return 'No tasks assigned';
             const label = context.label;
             const value = context.raw;
             const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
@@ -162,34 +175,24 @@ const DailyProgress = () => {
             return `${label}: ${value} task(s) - ${percentage}%`;
           }
         }
-      },
-      legend: {
-        display: validRows.length !== 0,
-        labels: {
-          color: getComputedStyle(document.body).getPropertyValue('--text').trim(),
-          font: { weight: '500' }
-        }
       }
     }
   };
+  
 
   return (
     <div className="progress-wrapper">
       <div className="table-chart-wrapper">
         <div className="table-section">
           <h2>Daily Progress</h2>
-          <p className="reverse-timer">Day ends in: ⏳ {remainingTime}</p>
+          <p className="reverse-timer">⏳ Day ends in: {remainingTime}</p>
           <button className="primary-button" onClick={toggleEdit}>
             {editMode ? 'Save Changes' : 'Edit Tasks'}
           </button>
           {editMode && (
             <>
-              <button className="secondary-button" onClick={handleAddRow}>
-                + Add Task
-              </button>
-              <button className="reset-button" onClick={handleResetRows}>
-                Reset Tasks
-              </button>
+              <button className="secondary-button" onClick={handleAddRow}>+ Add Task</button>
+              <button className="reset-button" onClick={handleResetRows}>Reset Tasks</button>
             </>
           )}
 
@@ -250,7 +253,10 @@ const DailyProgress = () => {
         <div className="chart-section">
           <h3>Progress Chart</h3>
           <div className="pie-container">
+            <div className="pie-wrapper">
             <Pie data={pieData} options={pieOptions} />
+            </div>
+
           </div>
         </div>
       </div>
@@ -264,21 +270,28 @@ const DailyProgress = () => {
               <th>Completed Tasks</th>
               <th>Uncompleted Tasks</th>
               <th>% Done</th>
+              <th>Total Study Time</th>
             </tr>
           </thead>
           <tbody>
             {(() => {
               const today = new Date().toLocaleDateString('en-GB');
               const todayRows = rows.filter(row => row.time.trim() && row.task.trim());
-              const completedTasks = todayRows.filter(row => row.completed).map(row => row.task);
-              const uncompletedTasks = todayRows.filter(row => !row.completed).map(row => row.task);
+              const completedTasks = todayRows.filter(row => row.completed);
+              const uncompletedTasks = todayRows.filter(row => !row.completed);
               const percentage = todayRows.length ? Math.round((completedTasks.length / todayRows.length) * 100) : 0;
+              const totalCompletedMinutes = completedTasks.reduce((acc, row) => acc + parseTimeToMinutes(row.time), 0);
+              const hours = Math.floor(totalCompletedMinutes / 60);
+              const minutes = totalCompletedMinutes % 60;
+              const formatted = totalCompletedMinutes > 0 ? `${hours}h ${minutes}m` : '-';
+
               return (
                 <tr>
                   <td>{today}</td>
-                  <td>{completedTasks.join(', ') || '-'}</td>
-                  <td>{uncompletedTasks.join(', ') || '-'}</td>
+                  <td>{completedTasks.map(row => row.task).join(', ') || '-'}</td>
+                  <td>{uncompletedTasks.map(row => row.task).join(', ') || '-'}</td>
                   <td>{percentage}%</td>
+                  <td>{formatted}</td>
                 </tr>
               );
             })()}
