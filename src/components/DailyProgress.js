@@ -7,7 +7,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const parseTimeToMinutes = (timeStr) => {
   if (!timeStr) return 0;
-
   const cleaned = timeStr.trim().toLowerCase();
 
   const rangeMatch = cleaned.match(/^(\d{1,2})(?::(\d{2}))?-(\d{1,2})(?::(\d{2}))?$/);
@@ -55,6 +54,9 @@ const DailyProgress = () => {
   });
   const [remainingTime, setRemainingTime] = useState('');
   const [currentDate, setCurrentDate] = useState(new Date().toDateString());
+  const [greeting, setGreeting] = useState('');
+  const [quote, setQuote] = useState('');
+  const [quoteMeaning, setQuoteMeaning] = useState('');
 
   const updateReport = (updatedRows) => {
     const valid = updatedRows.filter(row => row.time.trim() && row.task.trim());
@@ -73,15 +75,45 @@ const DailyProgress = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
-      const endOfDay = new Date();
-      endOfDay.setHours(23, 59, 59, 999);
-      const diff = endOfDay - now;
 
-      if (now.toDateString() !== currentDate) {
-        setCurrentDate(now.toDateString());
+      const startOfToday = new Date(now);
+      startOfToday.setHours(4, 0, 0, 0); // 4 AM today
+
+      const startOfTomorrow = new Date(startOfToday);
+      startOfTomorrow.setDate(startOfToday.getDate() + 1);
+
+      if (now < startOfToday) {
+        startOfToday.setDate(startOfToday.getDate() - 1);
+        startOfTomorrow.setDate(startOfToday.getDate() + 1);
+      }
+
+      const diff = startOfTomorrow - now;
+
+      if (now >= startOfTomorrow) {
+        updateReport(rows);
+        setCurrentDate(new Date().toDateString());
         const resetRows = Array.from({ length: 5 }, (_, i) => ({ id: i + 1, time: '', task: '', completed: false }));
         setRows(resetRows);
-        updateReport(resetRows);
+      }
+
+      const currentHour = now.getHours();
+      if (currentHour >= 4 && currentHour < 12) {
+          <p className="greeting-title">🏹 Daily Battle Plan</p>
+
+        setQuote('वीर भोग्या वसुंधरा');
+        setQuoteMeaning('The brave shall inherit the Earth. Conquer your destiny today!');
+      } else if (currentHour >= 12 && currentHour < 17) {
+        
+        setQuote('कर्मण्येवाधिकारस्ते मा फलेषु कदाचन');
+        setQuoteMeaning('You have the right to work, but not to the fruits of work. Focus on your efforts!');
+      } else if (currentHour >= 17 && currentHour < 21) {
+        
+        setQuote('उद्योगिनं पुरुषसिंहमुपैति लक्ष्मीः');
+        setQuoteMeaning('Prosperity embraces the lion-hearted who work hard. Push your limits!');
+      } else {
+        
+        setQuote('यत्र योगेश्वरः कृष्णो यत्र पार्थो धनुर्धरः');
+        setQuoteMeaning('Where there is Krishna and Arjuna, there is victory. Believe, fight, and win!');
       }
 
       const hrs = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
@@ -91,7 +123,7 @@ const DailyProgress = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [currentDate]);
+  }, [currentDate, rows]);
 
   useEffect(() => {
     localStorage.setItem('dailyProgressRows', JSON.stringify(rows));
@@ -150,13 +182,14 @@ const DailyProgress = () => {
       }
     ]
   };
+
   const pieOptions = {
     plugins: {
       legend: {
         display: validRows.length !== 0,
         position: 'top',
         labels: {
-          padding: 24, // <-- Adds vertical spacing between legend and pie
+          padding: 24,
           color: getComputedStyle(document.body).getPropertyValue('--text').trim(),
           font: {
             size: 14,
@@ -178,14 +211,19 @@ const DailyProgress = () => {
       }
     }
   };
-  
 
   return (
     <div className="progress-wrapper">
+      <div className="greeting-wrapper">
+        <p className="greeting-text">{greeting}</p>
+        <p className="quote-text">{quote}</p>
+        <p className="quote-meaning-text">{quoteMeaning}</p>
+      </div>
+      <p className="reverse-timer">⏳ Day ends in: {remainingTime}</p>
+
       <div className="table-chart-wrapper">
         <div className="table-section">
           <h2>Daily Progress</h2>
-          <p className="reverse-timer">⏳ Day ends in: {remainingTime}</p>
           <button className="primary-button" onClick={toggleEdit}>
             {editMode ? 'Save Changes' : 'Edit Tasks'}
           </button>
@@ -195,7 +233,6 @@ const DailyProgress = () => {
               <button className="reset-button" onClick={handleResetRows}>Reset Tasks</button>
             </>
           )}
-
           <table className="daily-progress-table">
             <thead>
               <tr>
@@ -251,12 +288,11 @@ const DailyProgress = () => {
         </div>
 
         <div className="chart-section">
-          <h3>Progress Chart</h3>
+          
           <div className="pie-container">
             <div className="pie-wrapper">
-            <Pie data={pieData} options={pieOptions} />
+              <Pie data={pieData} options={pieOptions} />
             </div>
-
           </div>
         </div>
       </div>

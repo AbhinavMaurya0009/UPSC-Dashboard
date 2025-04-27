@@ -83,7 +83,7 @@ body {
 }
 
 .pie-wrapper {
-  margin-top: 140px; /* Space between legend and Pie */
+  margin-top: 140px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -270,4 +270,36 @@ input[type="checkbox"] {
 .highlight-time {
   font-weight: bold;
   color: var(--highlight);
+}
+
+/* 🚀 New Greeting and Quote Block */
+.greeting-wrapper {
+  width: 100%;
+  background: var(--hover-bg);
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.greeting-text {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  color: var(--text);
+}
+
+.quote-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--highlight);
+  margin: 8px 0;
+} 
+
+.quote-meaning-text {
+  font-size: 20px;
+  font-style: italic;
+  color: #4d5158;
+  margin-bottom: 0;
 }

@@ -25,10 +25,10 @@ const App = () => {
 
         <div className="navbar">
           <NavLink to="/" end className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"}>
-            Time Table
-          </NavLink>
-          <NavLink to="/daily-progress" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"}>
             Daily Progress
+          </NavLink>
+          <NavLink to="/time-table" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"}>
+            Time Table
           </NavLink>
           <NavLink to="/syllabus" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"}>
             Syllabus Mapping
@@ -39,8 +39,8 @@ const App = () => {
         </div>
 
         <Routes>
-          <Route path="/" element={<TimeTable />} />
-          <Route path="/daily-progress" element={<DailyProgress />} />
+          <Route path="/" element={<DailyProgress />} />
+          <Route path="/time-table" element={<TimeTable />} />
           <Route path="/syllabus" element={<SyllabusMapping />} />
           <Route path="/monthly-targets" element={<MonthlyTargets />} />
         </Routes>
