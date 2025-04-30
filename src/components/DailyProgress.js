@@ -42,6 +42,15 @@ const parseTimeToMinutes = (timeStr) => {
   return 0;
 };
 
+const getLogicalDate = () => {
+  const now = new Date();
+  const logicalDate = new Date(now);
+  if (now.getHours() < 4) {
+    logicalDate.setDate(logicalDate.getDate() - 1);
+  }
+  return logicalDate.toLocaleDateString('en-GB');
+};
+
 const DailyProgress = () => {
   const [editMode, setEditMode] = useState(false);
   const [rows, setRows] = useState(() => {
@@ -53,7 +62,7 @@ const DailyProgress = () => {
     return saved ? JSON.parse(saved) : [];
   });
   const [remainingTime, setRemainingTime] = useState('');
-  const [currentDate, setCurrentDate] = useState(new Date().toDateString());
+  const [currentDate, setCurrentDate] = useState(getLogicalDate());
   const [greeting, setGreeting] = useState('');
   const [quote, setQuote] = useState('');
   const [quoteMeaning, setQuoteMeaning] = useState('');
@@ -63,13 +72,11 @@ const DailyProgress = () => {
     const completed = valid.filter(row => row.completed).length;
     const uncompleted = valid.length - completed;
     const percentage = valid.length ? Math.round((completed / valid.length) * 100) : 0;
-    const today = new Date().toLocaleDateString('en-GB');
+    const today = getLogicalDate();
     const newEntry = { date: today, completed, uncompleted, percentage };
-  
-    // Store full row data under a date-specific key
+
     localStorage.setItem('dailyProgress_' + today, JSON.stringify(updatedRows));
-  
-    // Update report state and persist
+
     setReport(prev => {
       const filtered = prev.filter(entry => entry.date !== today);
       const updated = [...filtered, newEntry];
@@ -77,13 +84,13 @@ const DailyProgress = () => {
       return updated;
     });
   };
-  
+
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
 
       const startOfToday = new Date(now);
-      startOfToday.setHours(4, 0, 0, 0); // 4 AM today
+      startOfToday.setHours(4, 0, 0, 0);
 
       const startOfTomorrow = new Date(startOfToday);
       startOfTomorrow.setDate(startOfToday.getDate() + 1);
@@ -97,27 +104,22 @@ const DailyProgress = () => {
 
       if (now >= startOfTomorrow) {
         updateReport(rows);
-        setCurrentDate(new Date().toDateString());
+        setCurrentDate(getLogicalDate());
         const resetRows = Array.from({ length: 5 }, (_, i) => ({ id: i + 1, time: '', task: '', completed: false }));
         setRows(resetRows);
       }
 
       const currentHour = now.getHours();
       if (currentHour >= 4 && currentHour < 12) {
-          <p className="greeting-title">🏹 Daily Battle Plan</p>
-
         setQuote('वीर भोग्या वसुंधरा');
         setQuoteMeaning('The brave shall inherit the Earth. Conquer your destiny today!');
       } else if (currentHour >= 12 && currentHour < 17) {
-        
         setQuote('कर्मण्येवाधिकारस्ते मा फलेषु कदाचन');
         setQuoteMeaning('You have the right to work, but not to the fruits of work. Focus on your efforts!');
       } else if (currentHour >= 17 && currentHour < 21) {
-        
         setQuote('उद्योगिनं पुरुषसिंहमुपैति लक्ष्मीः');
         setQuoteMeaning('Prosperity embraces the lion-hearted who work hard. Push your limits!');
       } else {
-        
         setQuote('यत्र योगेश्वरः कृष्णो यत्र पार्थो धनुर्धरः');
         setQuoteMeaning('Where there is Krishna and Arjuna, there is victory. Believe, fight, and win!');
       }
@@ -294,7 +296,6 @@ const DailyProgress = () => {
         </div>
 
         <div className="chart-section">
-          
           <div className="pie-container">
             <div className="pie-wrapper">
               <Pie data={pieData} options={pieOptions} />
@@ -317,30 +318,32 @@ const DailyProgress = () => {
           </thead>
           <tbody>
             {report.map((entry) => {
-                const entryDate = entry.date;
-                const studyRows = (localStorage.getItem('dailyProgress_' + entryDate) && JSON.parse(localStorage.getItem('dailyProgress_' + entryDate))) || [];
-                const completedTasks = studyRows.filter(row => row.completed).map(row => row.task).join(', ') || '-';
-                const uncompletedTasks = studyRows.filter(row => !row.completed).map(row => row.task).join(', ') || '-';
-                const totalCompletedMinutes = studyRows
+              const entryDate = entry.date;
+              const stored = localStorage.getItem('dailyProgress_' + entryDate);
+              const studyRows = stored ? JSON.parse(stored) : [];
+
+              const completedTasks = studyRows.filter(row => row.completed).map(row => row.task).join(', ') || '-';
+              const uncompletedTasks = studyRows.filter(row => !row.completed).map(row => row.task).join(', ') || '-';
+
+              const totalCompletedMinutes = studyRows
                 .filter(row => row.completed && row.time.trim())
                 .reduce((acc, row) => acc + parseTimeToMinutes(row.time), 0);
-              
-                const hours = Math.floor(totalCompletedMinutes / 60);
-                const minutes = totalCompletedMinutes % 60;
-                const formattedTime = totalCompletedMinutes > 0 ? `${hours}h ${minutes}m` : '-';
 
-                return (
+              const hours = Math.floor(totalCompletedMinutes / 60);
+              const minutes = totalCompletedMinutes % 60;
+              const formattedTime = totalCompletedMinutes > 0 ? `${hours}h ${minutes}m` : '-';
+
+              return (
                 <tr key={entryDate}>
-                    <td>{entryDate}</td>
-                    <td>{completedTasks}</td>
-                    <td>{uncompletedTasks}</td>
-                    <td>{entry.percentage}%</td>
-                    <td>{formattedTime}</td>
+                  <td>{entryDate}</td>
+                  <td>{completedTasks}</td>
+                  <td>{uncompletedTasks}</td>
+                  <td>{entry.percentage}%</td>
+                  <td>{formattedTime}</td>
                 </tr>
-                );
+              );
             })}
-            </tbody>
-
+          </tbody>
         </table>
       </div>
     </div>
