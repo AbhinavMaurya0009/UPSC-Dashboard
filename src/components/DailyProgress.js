@@ -42,13 +42,13 @@ const parseTimeToMinutes = (timeStr) => {
   return 0;
 };
 
-const getLogicalDate = () => {
+// 👇 Used only for report to roll over at 4 AM
+const getReportDate = () => {
   const now = new Date();
-  const logicalDate = new Date(now);
   if (now.getHours() < 4) {
-    logicalDate.setDate(logicalDate.getDate() - 1);
+    now.setDate(now.getDate() - 1);
   }
-  return logicalDate.toLocaleDateString('en-GB');
+  return now.toLocaleDateString('en-GB');
 };
 
 const DailyProgress = () => {
@@ -62,7 +62,7 @@ const DailyProgress = () => {
     return saved ? JSON.parse(saved) : [];
   });
   const [remainingTime, setRemainingTime] = useState('');
-  const [currentDate, setCurrentDate] = useState(getLogicalDate());
+  const [currentDate, setCurrentDate] = useState(new Date().toDateString());
   const [greeting, setGreeting] = useState('');
   const [quote, setQuote] = useState('');
   const [quoteMeaning, setQuoteMeaning] = useState('');
@@ -72,7 +72,7 @@ const DailyProgress = () => {
     const completed = valid.filter(row => row.completed).length;
     const uncompleted = valid.length - completed;
     const percentage = valid.length ? Math.round((completed / valid.length) * 100) : 0;
-    const today = getLogicalDate();
+    const today = getReportDate();
     const newEntry = { date: today, completed, uncompleted, percentage };
 
     localStorage.setItem('dailyProgress_' + today, JSON.stringify(updatedRows));
@@ -89,22 +89,29 @@ const DailyProgress = () => {
     const interval = setInterval(() => {
       const now = new Date();
 
-      const startOfToday = new Date(now);
-      startOfToday.setHours(4, 0, 0, 0);
+      const todayStart = new Date(now);
+      todayStart.setHours(4, 0, 0, 0);
 
-      const startOfTomorrow = new Date(startOfToday);
-      startOfTomorrow.setDate(startOfToday.getDate() + 1);
-
-      if (now < startOfToday) {
-        startOfToday.setDate(startOfToday.getDate() - 1);
-        startOfTomorrow.setDate(startOfToday.getDate() + 1);
+      let nextReset = new Date(todayStart);
+      if (now < todayStart) {
+        todayStart.setDate(todayStart.getDate() - 1);
+        nextReset = new Date(todayStart);
+        nextReset.setDate(todayStart.getDate() + 1);
+      } else {
+        nextReset.setDate(todayStart.getDate() + 1);
       }
 
-      const diff = startOfTomorrow - now;
+      const diff = nextReset - now;
 
-      if (now >= startOfTomorrow) {
+      const hrs = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
+      const mins = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+      const secs = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
+
+      setRemainingTime(`${hrs}:${mins}:${secs}`);
+
+      if (now >= nextReset) {
         updateReport(rows);
-        setCurrentDate(getLogicalDate());
+        setCurrentDate(new Date().toDateString());
         const resetRows = Array.from({ length: 5 }, (_, i) => ({ id: i + 1, time: '', task: '', completed: false }));
         setRows(resetRows);
       }
@@ -123,11 +130,6 @@ const DailyProgress = () => {
         setQuote('यत्र योगेश्वरः कृष्णो यत्र पार्थो धनुर्धरः');
         setQuoteMeaning('Where there is Krishna and Arjuna, there is victory. Believe, fight, and win!');
       }
-
-      const hrs = String(Math.floor(diff / (1000 * 60 * 60))).padStart(2, '0');
-      const mins = String(Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
-      const secs = String(Math.floor((diff % (1000 * 60)) / 1000)).padStart(2, '0');
-      setRemainingTime(`${hrs}:${mins}:${secs}`);
     }, 1000);
 
     return () => clearInterval(interval);
@@ -318,8 +320,7 @@ const DailyProgress = () => {
           </thead>
           <tbody>
             {report.map((entry) => {
-              const entryDate = entry.date;
-              const stored = localStorage.getItem('dailyProgress_' + entryDate);
+              const stored = localStorage.getItem('dailyProgress_' + entry.date);
               const studyRows = stored ? JSON.parse(stored) : [];
 
               const completedTasks = studyRows.filter(row => row.completed).map(row => row.task).join(', ') || '-';
@@ -334,8 +335,8 @@ const DailyProgress = () => {
               const formattedTime = totalCompletedMinutes > 0 ? `${hours}h ${minutes}m` : '-';
 
               return (
-                <tr key={entryDate}>
-                  <td>{entryDate}</td>
+                <tr key={entry.date}>
+                  <td>{entry.date}</td>
                   <td>{completedTasks}</td>
                   <td>{uncompletedTasks}</td>
                   <td>{entry.percentage}%</td>
