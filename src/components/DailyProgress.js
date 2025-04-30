@@ -67,7 +67,7 @@ const DailyProgress = () => {
     const newEntry = { date: today, completed, uncompleted, percentage };
   
     // Store full row data under a date-specific key
-    localStorage.setItem('dailyProgress_' + today, JSON.stringify(valid));
+    localStorage.setItem('dailyProgress_' + today, JSON.stringify(updatedRows));
   
     // Update report state and persist
     setReport(prev => {
@@ -322,8 +322,9 @@ const DailyProgress = () => {
                 const completedTasks = studyRows.filter(row => row.completed).map(row => row.task).join(', ') || '-';
                 const uncompletedTasks = studyRows.filter(row => !row.completed).map(row => row.task).join(', ') || '-';
                 const totalCompletedMinutes = studyRows
-                .filter(row => row.completed)
+                .filter(row => row.completed && row.time.trim())
                 .reduce((acc, row) => acc + parseTimeToMinutes(row.time), 0);
+              
                 const hours = Math.floor(totalCompletedMinutes / 60);
                 const minutes = totalCompletedMinutes % 60;
                 const formattedTime = totalCompletedMinutes > 0 ? `${hours}h ${minutes}m` : '-';
