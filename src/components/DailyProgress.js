@@ -65,13 +65,19 @@ const DailyProgress = () => {
     const percentage = valid.length ? Math.round((completed / valid.length) * 100) : 0;
     const today = new Date().toLocaleDateString('en-GB');
     const newEntry = { date: today, completed, uncompleted, percentage };
-
+  
+    // Store full row data under a date-specific key
+    localStorage.setItem('dailyProgress_' + today, JSON.stringify(valid));
+  
+    // Update report state and persist
     setReport(prev => {
       const filtered = prev.filter(entry => entry.date !== today);
-      return [...filtered, newEntry];
+      const updated = [...filtered, newEntry];
+      localStorage.setItem('dailyProgressReport', JSON.stringify(updated));
+      return updated;
     });
   };
-
+  
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
@@ -310,28 +316,30 @@ const DailyProgress = () => {
             </tr>
           </thead>
           <tbody>
-            {(() => {
-              const today = new Date().toLocaleDateString('en-GB');
-              const todayRows = rows.filter(row => row.time.trim() && row.task.trim());
-              const completedTasks = todayRows.filter(row => row.completed);
-              const uncompletedTasks = todayRows.filter(row => !row.completed);
-              const percentage = todayRows.length ? Math.round((completedTasks.length / todayRows.length) * 100) : 0;
-              const totalCompletedMinutes = completedTasks.reduce((acc, row) => acc + parseTimeToMinutes(row.time), 0);
-              const hours = Math.floor(totalCompletedMinutes / 60);
-              const minutes = totalCompletedMinutes % 60;
-              const formatted = totalCompletedMinutes > 0 ? `${hours}h ${minutes}m` : '-';
+            {report.map((entry) => {
+                const entryDate = entry.date;
+                const studyRows = (localStorage.getItem('dailyProgress_' + entryDate) && JSON.parse(localStorage.getItem('dailyProgress_' + entryDate))) || [];
+                const completedTasks = studyRows.filter(row => row.completed).map(row => row.task).join(', ') || '-';
+                const uncompletedTasks = studyRows.filter(row => !row.completed).map(row => row.task).join(', ') || '-';
+                const totalCompletedMinutes = studyRows
+                .filter(row => row.completed)
+                .reduce((acc, row) => acc + parseTimeToMinutes(row.time), 0);
+                const hours = Math.floor(totalCompletedMinutes / 60);
+                const minutes = totalCompletedMinutes % 60;
+                const formattedTime = totalCompletedMinutes > 0 ? `${hours}h ${minutes}m` : '-';
 
-              return (
-                <tr>
-                  <td>{today}</td>
-                  <td>{completedTasks.map(row => row.task).join(', ') || '-'}</td>
-                  <td>{uncompletedTasks.map(row => row.task).join(', ') || '-'}</td>
-                  <td>{percentage}%</td>
-                  <td>{formatted}</td>
+                return (
+                <tr key={entryDate}>
+                    <td>{entryDate}</td>
+                    <td>{completedTasks}</td>
+                    <td>{uncompletedTasks}</td>
+                    <td>{entry.percentage}%</td>
+                    <td>{formattedTime}</td>
                 </tr>
-              );
-            })()}
-          </tbody>
+                );
+            })}
+            </tbody>
+
         </table>
       </div>
     </div>
